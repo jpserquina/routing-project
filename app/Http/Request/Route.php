@@ -49,26 +49,6 @@ class Route {
         return self::$action;
     }
 
-    public static function get()
-    {
-        return json_encode(self::get_uri());
-    }
-
-    public static function post()
-    {
-        return json_encode(self::get_uri());
-    }
-
-    public static function patch()
-    {
-        return json_encode(self::get_uri());
-    }
-
-    public static function delete()
-    {
-        return json_encode(self::get_uri());
-    }
-
     /**
      *
      */
