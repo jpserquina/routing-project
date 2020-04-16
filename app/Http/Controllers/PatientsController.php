@@ -2,29 +2,56 @@
 
 namespace App\Http\Controllers;
 
-class PatientsController {
-    public function index()
-    {
+use App\Patients;
 
+/**
+ * Class PatientsController
+ * @package App\Http\Controllers
+ */
+class PatientsController extends GenericController{
+    public static function index()
+    {
+        return self::view([
+            'model' => __CLASS__,
+            'action' => __METHOD__,
+        ]);
     }
 
-    public function get($patientId)
+    public static function get($patientId)
     {
-
+        return self::view([
+            'model' => __CLASS__,
+            'action' => __METHOD__,
+            func_get_args(),
+            '$patientId' => $patientId,
+        ]);
     }
 
-    public function create()
+    public static function create()
     {
+        return self::view([
+            'model' => __CLASS__,
+            'action' => __METHOD__,
+        ]);
+}
 
+    public static function update($patientId)
+    {
+        return self::view([
+            'model' => __CLASS__,
+            'action' => __METHOD__,
+            func_get_args(),
+            '$patientId' => $patientId,
+        ]);
     }
 
-    public function update($patientId)
+    public static function delete($patientId)
     {
-
-    }
-
-    public function delete($patientId)
-    {
-
+        return self::view([
+            'model' => __CLASS__,
+            'action' => __METHOD__,
+            func_get_args(),
+            '$patientId' => $patientId,
+        ]);
     }
 }

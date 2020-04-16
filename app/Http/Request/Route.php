@@ -2,6 +2,9 @@
 
 namespace App\Http\Request;
 
+use App\Http\Controllers\PatientsController;
+use App\Http\Controllers\PatientsMetricsController;
+
 /**
  * Class Route
  * @package App\Http\Request
@@ -11,11 +14,17 @@ class Route {
     private static $uri;
     private static $action;
     private static $routes;
+    private static $is_index;
 
     const GET = 'GET';
     const POST = 'POST';
     const PATCH = 'PATCH';
     const DELETE = 'DELETE';
+    const METHOD_INDEX = 'index';
+    const METHOD_GET = 'get';
+    const METHOD_CREATE = 'create';
+    const METHOD_UPDATE = 'update';
+    const METHOD_DELETE = 'delete';
 
     /**
      * @param $uri
@@ -69,12 +78,14 @@ class Route {
         );
         $result = array_values($result);
         $uri_array = [];
+        self::reset_is_index();
 
         for ($i = 0; $i < count($result); $i = $i + 2) {
             if (empty($uri_array[ $result[$i] ]))
             {
                 if (!array_key_exists($i + 1, $result))
                 {
+                    self::set_is_index();
                     $result[$i + 1] = '';
                 }
                 $uri_array[ $result[$i] ] = $result[$i + 1];
@@ -83,6 +94,22 @@ class Route {
 
         self::set_uri($uri_array);
         self::set_action($uri_array);
+    }
+
+
+    private static function is_index()
+    {
+        return self::$is_index;
+    }
+
+    private static function set_is_index()
+    {
+        self::$is_index = true;
+    }
+
+    private static function reset_is_index()
+    {
+        self::$is_index = false;
     }
 
     /**
@@ -107,6 +134,14 @@ class Route {
         {
             self::do_404();
         }
+
+        $class_name = self::get_class_name();
+        $method_name = self::get_method_name($method);
+        $params = self::get_params();
+//        "App\Http\Controllers\\" . $class_name::$method_name(...$params);
+
+        $func = ["App\Http\Controllers\\" . $class_name, $method_name];
+        $func(...$params);
     }
 
     /**
@@ -152,5 +187,71 @@ class Route {
         http_response_code(404);
         echo '404 not found';
         die();
+    }
+
+    private static function do_500()
+    {
+        http_response_code(500);
+        echo '500 an internal error occurred';
+        die();
+    }
+
+    /**
+     * @return string
+     */
+    private static function get_class_name()
+    {
+        $action = self::get_action();
+
+        $uri_array = explode('.', $action);
+        array_walk($uri_array, function(&$item) { $item = ucfirst($item); });
+        $uri_array = implode('', $uri_array);
+
+        return $uri_array . 'Controller';
+    }
+
+    /**
+     * @param string $method
+     * @return string
+     */
+    private static function get_method_name(string $method)
+    {
+        switch (self::is_index()) {
+            case true:
+                if ($method === self::GET)
+                {
+                    return self::METHOD_INDEX;
+
+                }
+                self::do_500();
+                break;
+            case false:
+                break;
+        }
+
+        switch($method) {
+            case self::GET:
+                return self::METHOD_GET;
+                break;
+            case self::POST:
+                return self::METHOD_CREATE;
+                break;
+            case self::PATCH:
+                return self::METHOD_UPDATE;
+                break;
+            case self::DELETE:
+                return self::METHOD_DELETE;
+                break;
+            default:
+                return self::METHOD_INDEX;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private static function get_params()
+    {
+        return array_filter(array_values(self::get_uri()));
     }
 }
