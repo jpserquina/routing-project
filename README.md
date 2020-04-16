@@ -1,4 +1,26 @@
 # routing-project
+* a project that implements a routing class in a barebones MVC scaffold
+* requires PHP 7.4 (uses the spread operator and type declarations)
+* with PSR-4 (autoloading)
+* RESTful endpoints
+* configurable routes
+* endpoints require Basic auth payload
+* includes PHPUnit tests
+
+## Setting up
+* Create an Apache 2.4/PHP 7.4 instance, either via *AMP or VM. I used XAMPP Portable for Windows (`xampp-portable-windows-x64-7.4.4-0-VC15.7z`) for this project
+* Clone this repo into the `htdocs` directory. This will create the `routing-project` project directory inside of `htdocs`
+* Run `composer install` in the project directory
+* Browse to https://localhost/router-project/public; if setup was successful, a `phpinfo()` dump should be shown
+
+## Tests
+Tests are located under `~/tests/RouteTest.php`, and include all the test cases provided below.
+
+## Notes
+From here, the following are needed to turn this into a live application
+* Schema, migrations, and persisting model data
+* Adding a views handler / renderer (MVC), or a JSON-contract handler for a headless project
+* Middleware for better auth, CSRF, and injection mitigation
 
 ---
 
