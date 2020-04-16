@@ -11,7 +11,7 @@
 * Create an Apache 2.4/PHP 7.4 instance, either via *AMP or VM. I used XAMPP Portable for Windows (`xampp-portable-windows-x64-7.4.4-0-VC15.7z`) for this project
 * Clone this repo into the `htdocs` directory. This will create the `routing-project` project directory inside of `htdocs`
 * Run `composer install` in the project directory
-* Browse to https://localhost/router-project/public; if setup was successful, a `phpinfo()` dump should be shown
+* Browse to https://localhost/routing-project/public; if setup was successful, a `phpinfo()` dump should be shown
 
 ## Tests
 Tests are located under `~/tests/RouteTest.php`, and include all the test cases provided below.
