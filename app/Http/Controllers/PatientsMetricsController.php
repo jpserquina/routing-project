@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class PatientsController {
+class PatientsMetricsController {
     public function index()
     {
 

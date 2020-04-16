@@ -89,12 +89,18 @@ class Route {
         );
         $result = array_values($result);
         $uri_array = [];
+
         for ($i = 0; $i < count($result); $i = $i + 2) {
             if (empty($uri_array[ $result[$i] ]))
             {
+                if (!array_key_exists($i + 1, $result))
+                {
+                    $result[$i + 1] = '';
+                }
                 $uri_array[ $result[$i] ] = $result[$i + 1];
             }
         }
+
         self::set_uri($uri_array);
         self::set_action($uri_array);
     }
