@@ -6,7 +6,6 @@ class Route {
 
     private $uri;
     private $method;
-    private $request_body;
 
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
@@ -42,14 +41,19 @@ class Route {
 
     public function get()
     {
-        return json_encode($this->get_uri());
+        if ($this->get_method() === self::METHOD_GET)
+        {
+            return json_encode($this->get_uri());
+        }
     }
 
     private function split_uri(): void
     {
-        $uri = array_filter(
-            explode('/',
-                getenv('REQUEST_URI')),
+        $result = array_filter(
+            explode(
+                '/',
+                getenv('REQUEST_URI')
+            ),
             function($item) {
                 if (!in_array($item, ['routing-project', 'public']))
                 {
@@ -58,7 +62,12 @@ class Route {
                 return '';
             }
         );
-        $this->set_uri($uri);
+        $result = array_values($result);
+        $uri_array = [];
+        for ($i = 0; $i < count($result); $i = $i + 2) {
+            $uri_array[ $result[$i] ] = $result[$i + 1];
+        }
+        $this->set_uri($uri_array);
     }
 
     private function filter_methods(): void
