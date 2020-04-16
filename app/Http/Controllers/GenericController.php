@@ -12,9 +12,9 @@ class GenericController {
 
     /**
      * @param array $data
-     * @return string
+     * @return void
      */
-    public static function view(array $data): string
+    public static function view(array $data): void
     {
         echo json_encode($data);
     }
