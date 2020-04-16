@@ -2,9 +2,6 @@
 
 namespace App\Http\Request;
 
-use App\Http\Controllers\PatientsController;
-use App\Http\Controllers\PatientsMetricsController;
-
 /**
  * Class Route
  * @package App\Http\Request
@@ -29,15 +26,15 @@ class Route {
     /**
      * @param $uri
      */
-    private static function set_uri($uri)
+    private static function set_uri($uri): void
     {
         self::$uri = $uri;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    private static function get_uri()
+    private static function get_uri(): array
     {
         return self::$uri;
     }
@@ -45,15 +42,15 @@ class Route {
     /**
      * @param $uri
      */
-    private static function set_action($uri)
+    private static function set_action($uri): void
     {
         self::$action = implode('.', array_keys($uri));
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    private static function get_action()
+    private static function get_action(): string
     {
         return self::$action;
     }
@@ -61,7 +58,7 @@ class Route {
     /**
      *
      */
-    private static function split_uri()
+    private static function split_uri(): void
     {
         $result = array_filter(
             explode(
@@ -96,18 +93,26 @@ class Route {
         self::set_action($uri_array);
     }
 
-
-    private static function is_index()
+    /**
+     * @return bool
+     */
+    private static function is_index(): bool
     {
         return self::$is_index;
     }
 
-    private static function set_is_index()
+    /**
+     *
+     */
+    private static function set_is_index(): void
     {
         self::$is_index = true;
     }
 
-    private static function reset_is_index()
+    /**
+     *
+     */
+    private static function reset_is_index(): void
     {
         self::$is_index = false;
     }
@@ -115,7 +120,7 @@ class Route {
     /**
      *
      */
-    public static function process()
+    public static function process(): void
     {
         self::split_uri();
 
@@ -138,7 +143,6 @@ class Route {
         $class_name = self::get_class_name();
         $method_name = self::get_method_name($method);
         $params = self::get_params();
-//        "App\Http\Controllers\\" . $class_name::$method_name(...$params);
 
         $func = ["App\Http\Controllers\\" . $class_name, $method_name];
         $func(...$params);
@@ -147,7 +151,7 @@ class Route {
     /**
      * @param string $uri
      */
-    public static function resource(string $uri)
+    public static function resource(string $uri): void
     {
         $actions = array_filter(
             explode(
@@ -160,9 +164,9 @@ class Route {
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    private static function get_actions()
+    private static function get_actions(): array
     {
         return self::$routes;
     }
@@ -171,7 +175,7 @@ class Route {
      * @param string $method
      * @return bool
      */
-    private static function validate_access(string $method)
+    private static function validate_access(string $method): bool
     {
         $is_get_method = ($method === self::GET);
         $validated = Auth::validate();
@@ -182,14 +186,14 @@ class Route {
     /**
      *
      */
-    private static function do_404()
+    private static function do_404(): void
     {
         http_response_code(404);
         echo '404 not found';
         die();
     }
 
-    private static function do_500()
+    private static function do_500(): void
     {
         http_response_code(500);
         echo '500 an internal error occurred';
@@ -199,7 +203,7 @@ class Route {
     /**
      * @return string
      */
-    private static function get_class_name()
+    private static function get_class_name(): string
     {
         $action = self::get_action();
 
@@ -214,16 +218,14 @@ class Route {
      * @param string $method
      * @return string
      */
-    private static function get_method_name(string $method)
+    private static function get_method_name(string $method): string
     {
         switch (self::is_index()) {
             case true:
-                if ($method === self::GET)
+                if (in_array($method, [self::GET]))
                 {
                     return self::METHOD_INDEX;
-
                 }
-                self::do_500();
                 break;
             case false:
                 break;
@@ -250,7 +252,7 @@ class Route {
     /**
      * @return array
      */
-    private static function get_params()
+    private static function get_params(): array
     {
         return array_filter(array_values(self::get_uri()));
     }

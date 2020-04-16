@@ -8,7 +8,8 @@ use App\Patients;
  * Class PatientsController
  * @package App\Http\Controllers
  */
-class PatientsController extends GenericController{
+class PatientsController extends GenericController {
+
     public static function index()
     {
         return self::view([

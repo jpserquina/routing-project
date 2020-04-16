@@ -9,6 +9,7 @@ use App\PatientsMetrics;
  * @package App\Http\Controllers
  */
 class PatientsMetricsController extends GenericController {
+
     public static function index($patientId)
     {
         return self::view([
