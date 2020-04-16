@@ -2,10 +2,7 @@
 
 require('vendor/autoload.php');
 
-use PHPUnit\Framework\TestCase;
-use App\Http\Request\Route;
-
-final class RouteTest extends TestCase
+final class RouteTest extends PHPUnit_Framework_TestCase
 {
     protected $client;
 
@@ -23,9 +20,11 @@ final class RouteTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $data = json_decode($response->getBody());
+        $response->getBody()->rewind();
+        $data = json_decode($response->getBody()->__toString());
 
         $this->assertArrayHasKey('class_name', $data);
+        
         $this->assertArrayHasKey('method_name', $data);
         $this->assertEquals('PatientsController', $data['class_name']);
         $this->assertEquals('index', $data['method_name']);

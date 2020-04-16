@@ -1,8 +1,9 @@
 <?php
 
-require_once '../app/init.php';
+//phpinfo();
 
-use App\Http\Request\Route as Route;
+require_once('../app/init.php');
+require_once('../config/routes.php');
 
-$route = new Route();
-echo $route->get();
+
+App\Http\Request\Route::process();

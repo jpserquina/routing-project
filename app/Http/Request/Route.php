@@ -2,52 +2,77 @@
 
 namespace App\Http\Request;
 
+/**
+ * Class Route
+ * @package App\Http\Request
+ */
 class Route {
 
-    private $uri;
-    private $method;
+    private static $uri;
+    private static $action;
+    private static $routes;
 
-    const METHOD_GET = 'GET';
-    const METHOD_POST = 'POST';
-    const METHOD_PATCH = 'PATCH';
-    const METHOD_DELETE = 'DELETE';
-    const METHOD_INVALID = 'method_invalid';
+    const GET = 'GET';
+    const POST = 'POST';
+    const PATCH = 'PATCH';
+    const DELETE = 'DELETE';
 
-    public function __construct()
+    /**
+     * @param $uri
+     */
+    private static function set_uri($uri)
     {
-        $this->split_uri();
-        $this->filter_methods();
+        self::$uri = $uri;
     }
 
-    public function set_uri($uri)
+    /**
+     * @return mixed
+     */
+    private static function get_uri()
     {
-        $this->uri = $uri;
+        return self::$uri;
     }
 
-    public function get_uri()
+    /**
+     * @param $uri
+     */
+    private static function set_action($uri)
     {
-        return $this->uri;
+        self::$action = implode('.', array_keys($uri));
     }
 
-    public function set_method(string $method)
+    /**
+     * @return mixed
+     */
+    private static function get_action()
     {
-        $this->method = $method;
+        return self::$action;
     }
 
-    public function get_method()
+    public static function get()
     {
-        return $this->method;
+        return json_encode(self::get_uri());
     }
 
-    public function get()
+    public static function post()
     {
-        if ($this->get_method() === self::METHOD_GET)
-        {
-            return json_encode($this->get_uri());
-        }
+        return json_encode(self::get_uri());
     }
 
-    private function split_uri(): void
+    public static function patch()
+    {
+        return json_encode(self::get_uri());
+    }
+
+    public static function delete()
+    {
+        return json_encode(self::get_uri());
+    }
+
+    /**
+     *
+     */
+    private static function split_uri()
     {
         $result = array_filter(
             explode(
@@ -65,31 +90,81 @@ class Route {
         $result = array_values($result);
         $uri_array = [];
         for ($i = 0; $i < count($result); $i = $i + 2) {
-            $uri_array[ $result[$i] ] = $result[$i + 1];
+            if (empty($uri_array[ $result[$i] ]))
+            {
+                $uri_array[ $result[$i] ] = $result[$i + 1];
+            }
         }
-        $this->set_uri($uri_array);
+        self::set_uri($uri_array);
+        self::set_action($uri_array);
     }
 
-    private function filter_methods(): void
+    /**
+     *
+     */
+    public static function process()
     {
-        $method = getenv('REQUEST_METHOD');
+        self::split_uri();
 
-        switch ($method)
+        $method = getenv('REQUEST_METHOD');
+        $valid_access = self::validate_access($method);
+        $current_action_in_registered_routes = in_array(self::get_action(), self::get_actions());
+
+        $valid_request = $valid_access && $current_action_in_registered_routes;
+
+        if (!$valid_access)
         {
-            case self::METHOD_GET:
-                $this->set_method(self::METHOD_GET);
-                break;
-            case self::METHOD_POST:
-                $this->set_method(self::METHOD_POST);
-                break;
-            case self::METHOD_PATCH:
-                $this->set_method(self::METHOD_PATCH);
-                break;
-            case self::METHOD_DELETE:
-                $this->set_method(self::METHOD_DELETE);
-                break;
-            default:
-                $this->set_method(self::METHOD_INVALID);
+            Auth::do_401();
         }
+
+        if (!$valid_request)
+        {
+            self::do_404();
+        }
+    }
+
+    /**
+     * @param string $uri
+     */
+    public static function resource(string $uri)
+    {
+        $actions = array_filter(
+            explode(
+                '.',
+                $uri
+            )
+        );
+
+        self::$routes[] = implode('.', $actions);
+    }
+
+    /**
+     * @return mixed
+     */
+    private static function get_actions()
+    {
+        return self::$routes;
+    }
+
+    /**
+     * @param string $method
+     * @return bool
+     */
+    private static function validate_access(string $method)
+    {
+        $is_get_method = ($method === self::GET);
+        $validated = Auth::validate();
+
+        return ($is_get_method || $validated);
+    }
+
+    /**
+     *
+     */
+    private static function do_404()
+    {
+        http_response_code(404);
+        echo '404 not found';
+        die();
     }
 }
