@@ -14,7 +14,12 @@
 * Browse to https://localhost/routing-project/public; if setup was successful, a `phpinfo()` dump should be shown
 
 ## Tests
-Tests are located under `~/tests/RouteTest.php`, and include all the test cases provided below.
+* Tests are located under `~/tests/RouteTest.php`, and include all the test cases provided below.
+* To run PHPUnit test manually:
+    * change directory to `~/routing-project`
+    * `composer install`
+    * change directory to `~/routing-project/tests`
+    * `../vendor/bin/phpunit --bootstrap ../vendor/autoload.php RouteTest.php`
 
 ## Notes
 From here, the following are needed to turn this into a live application
