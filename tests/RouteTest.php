@@ -10,11 +10,11 @@ final class RouteTest extends PHPUnit_Framework_TestCase
     protected function setUp(): void
     {
         $this->client = new GuzzleHttp\Client([
-            'base_uri' => 'https://localhost',
+            'base_uri' => 'http://localhost',
             'verify' => false,
         ]);
 
-        $this->prefix = '/routing-project/public';
+        $this->prefix = '.';
     }
 
     /**
