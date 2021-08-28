@@ -7,19 +7,17 @@
 * endpoints require Basic auth payload
 * includes PHPUnit tests
 
+## Prerequisites
+* Docker and `docker-compose`
+
 ## Setting up
-* Create an Apache 2.4/PHP 7.4 instance, either via *AMP or VM. I used XAMPP Portable for Windows (`xampp-portable-windows-x64-7.4.4-0-VC15.7z`) for this project
-* Clone this repo into the `htdocs` directory. This will create the `routing-project` project directory inside of `htdocs`
-* Run `composer install` in the project directory
-* Browse to https://localhost/routing-project/public; if setup was successful, a `phpinfo()` dump should be shown
+* `$ docker-compose build`
+* `$ docker-compose up -d`
+* `$ docker-compose exec app composer install`
+* (when done) `$ docker-compose down`
 
 ## Tests
 * Tests are located under `~/routing-project/tests/RouteTest.php`, and include all the test cases provided below.
-* To run PHPUnit test manually:
-    * change directory to `~/routing-project`
-    * `composer install`
-    * change directory to `~/routing-project/tests`
-    * `../vendor/bin/phpunit --bootstrap ../vendor/autoload.php RouteTest.php`
 
 ## Notes
 From here, the following are needed to turn this into a live application

@@ -1,20 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Tests;
+
 require('../vendor/autoload.php');
+
+use PHPUnit_Framework_TestCase;
+use GuzzleHttp;
+use Dotenv;
 
 final class RouteTest extends PHPUnit_Framework_TestCase
 {
-    protected $client;
-    protected $prefix;
+    protected GuzzleHttp\Client $client;
+    protected string $prefix;
 
     protected function setUp(): void
     {
+        $dotenv = Dotenv\Dotenv::createImmutable('../');
+        $dotenv->load();
+
         $this->client = new GuzzleHttp\Client([
-            'base_uri' => 'https://localhost',
-            'verify' => false,
+            'base_uri' => $_ENV['APP_URL']
         ]);
 
-        $this->prefix = '/routing-project/public';
+        $this->prefix = '';
     }
 
     /**

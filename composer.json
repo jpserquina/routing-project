@@ -10,7 +10,8 @@
     "require": {
         "ext-json": "*",
         "guzzlehttp/guzzle": "6.3",
-        "phpunit/phpunit": "5.0"
+        "phpunit/phpunit": "5.0",
+        "vlucas/phpdotenv": "^5.3"
     },
     "autoload-dev": {
         "psr-4": {
